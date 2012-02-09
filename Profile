@@ -7,8 +7,8 @@ title   "Bang! Bang!"
 summary "Bang methods for assertions!"
 created '2012-01-26'
 
-description "Bang Bang provides an assertion grammar utlizing bang methods and
-built on top of the the Assay assertions system."
+description "Bang! Bang! provides a dynamic assertions framework utlizing bang
+methods and built to BRASS standards."
 
 authors [
   'Thomas Sawyer <transfire@gmail.com>'
@@ -23,6 +23,7 @@ requirements [
 resources(
   'home' => 'http://rubyworks.github.com/bang',
   'code' => 'http://github.com/rubyworks/bang',
+  'bugs' => 'http://github.com/rubyworks/bang/issues',
   'mail' => 'http://groups.google.com/groups/rubyworks-mailinglist'
 )
 

@@ -29,6 +29,7 @@ repositories:
 resources:
   home: http://rubyworks.github.com/bang
   code: http://github.com/rubyworks/bang
+  bugs: http://github.com/rubyworks/bang/issues
   mail: http://groups.google.com/groups/rubyworks-mailinglist
 extra: {}
 load_path:
@@ -39,8 +40,8 @@ name: bang
 title: Bang! Bang!
 summary: Bang methods for assertions!
 created: '2012-01-26'
-description: ! 'Bang Bang provides an assertion grammar utlizing bang methods and
+description: ! 'Bang! Bang! provides a dynamic assertions framework utlizing bang
 
-  built on top of the the Assay assertions system.'
+  methods and built to BRASS standards.'
 organization: Rubyworks
 date: '2012-02-09'
