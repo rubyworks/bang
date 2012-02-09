@@ -46,6 +46,10 @@ An RSpec adapter is in the works.
 Cucumber does not require an adapter as it does not differntiate errors
 from assertions.
 
+Note, these adapters simply require the `brass/adapters/minitest` and
+`brass/adapters/testunit` respecitvely along with `bang`. So that's another
+way to do it too.
+
 
 ## Copyrights
 

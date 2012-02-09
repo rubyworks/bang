@@ -1,2 +1,2 @@
-require 'assay/adapter/testunit'
+require 'brass/adapters/testunit'
 require 'bang'

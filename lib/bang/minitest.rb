@@ -1,2 +1,2 @@
-require 'assay/adapter/minitest'
+require 'brass/adapters/minitest'
 require 'bang'
