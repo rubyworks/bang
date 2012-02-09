@@ -15,7 +15,7 @@ authors [
 ]
 
 requirements [
-  'assay',
+  'brass',
   'detroit (build)',
   'qed     (test)'
 ]
