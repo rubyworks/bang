@@ -1,93 +1,344 @@
-require 'assay'
-
-# This module provides assertion mettods as object extensions in the
-# form of bang methods.
-#
-# Examples
-#
-#   "string".instance_of!(String)
-#
-#   "string".equal!("string")
-#
-#   "string".not_equal!("another")
-#
 module Bang
 
-  BANG_NAMES = {
-    :kind     => :kind_of,
-    :instance => :instance_of,
-    :executes => :satisfy        # mabybe change this in Assay
-  }
+  if RUBY_VERSION < '1.9'
+    require 'bang/version'
+  else
+    require_relative 'bang/version'
+  end
 
-  BANG_ALIAS = {
-    #:equal => [:identical]
-  }
-
+  # Bang's assertion class. Follows standard set by Brass project,
+  # defining `#assertion?` method which return `true`.
   #
-  # Meta-programming routine for creating all the subjective methods.
+  class Assertion < ::Exception
+
+    #
+    # Price together an Assetion error give the message used to 
+    # cause the assertion failure.
+    #
+    # @return [Assertion] Assertion instance.
+    #
+    def self.piece(s, a, b, t)
+      e = new(message(s, *a, &b))
+      e.set_backtrace(t)
+      e
+    end
+
+    #
+    # Put together an error message representive of the assertion made.
+    #
+    # @todo Imporve this to better handle operators.
+    #
+    # @return [String] Failed assertion message.
+    #
+    def self.message(s, *a, &b)
+      "#{s}(%s)" % a.map{ |e| e.inspect }.join(',')
+    end
+
+    #
+    # Bang::Assertion is alwasy an assertion.
+    #
+    # @return [true] Always true.
+    #
+    def assertion?
+      true
+    end
+  end
+
+  # Mixin of Object class, will take any undefined bang method, e.g. `foo!`
+  # and if there is a corresponding query method, e.g. `foo?`, then it will
+  # utilize the query method to make an assertion.
   #
-  def self.bootstrap
-    Assertion.subclasses.each do |const|
-      name = const.assertive_name.to_sym
-      name = BANG_NAMES[name] || name
+  module MethodMissing
 
-      aliases = BANG_ALIAS[name]
+    #
+    # If missing method is a bang method, see if there is a corresponding query
+    # method and use that to make an assertion. Will also recognize the same
+    # prefixed by `not_`, e.g. `not_equal_to?`.
+    #
+    def method_missing(s, *a, &b)
+      return super(s, *a, &b) unless s.to_s.end_with?('!')
 
-      [name, *aliases].each do |name|
-        define_method("#{name}!") do |*args, &blk|
-          const.assert!(self, *args, :backtrace=>caller, &blk)
-        end
+      neg  = false
+      name = s.to_s.chomp('!')
 
-        define_method("not_#{name}!") do |*args, &blk|
-          const.refute!(self, *args, :backtrace=>caller, &blk)
-        end
+      if name.start_with?('not_')
+        neg  = true
+        name = name[4..-1]
+      end
+
+      meth = method("#{name}?") rescue nil
+
+      return super(s, *a, &b) unless meth
+
+      result = meth.call(*a, &b)
+
+      if !(neg ^ result)
+        raise Bang::Assertion.piece(s, a, b, caller)
       end
     end
+
   end
 
+  # Mixin for Object class that adds some very useful query methods.
   #
-  # Do it!
-  #
-  bootstrap
+  module ObjectMixin
 
-  #
-  def thrown!(&block)
-    ThrowAssay.assert!(self, :backtrace=>caller, &block)
-  end
-
-  #
-  def not_thrown!(&block)
-    ThrowAssay.refute!(self, :backtrace=>caller, &block)
-  end
-
-  #
-  #
-  def throws!(object)
-    ThrowAssay.assert!(object, :backtrace=>caller, &self)
-  end
-
-  #
-  module ForProc
     #
+    # Is `self` identical with `other`? In other words, do two variables
+    # reference the one and the same object.
     #
-    def raises!(exception)
-      RaiseAssay.assert!(exception, :backtrace=>caller, &self)
+    # @return [true,false] Whether `self` is identical to `other`.
+    #
+    def identical?(other)
+      other.object_id == object_id
     end
 
     #
-    # @todo Better name?
-    def rescues!(exception)
-      RescueAssay.assert!(exception, :backtrace=>caller, &self)
+    # Query method for `#==`. We have to use the `_to` suffix becuase Ruby
+    # already defines the prepositionless term as a synonym for `#identical?`.
+    # (Hopefully that will change one day.)
+    #
+    # @return [true,false] Whether `self` is equal to `other`.
+    #
+    def equal_to?
+      other == self
     end
+
+    #
+    # Test whether `self` is like `other`. Like is broad equality
+    # measure testing `identical?`, `eql?`, `==` and `===`.
+    #
+    # @todo Should `like?` this include `=~` also?
+    #
+    # @return [true,false] Whether `self` is like `other`.
+    #
+    def like?(other)
+      other.identical?(self) ||
+      other.eql?(self)       ||
+      other.==(self)         ||
+      other.===(self)
+    end
+
+    #
+    # Test whether `other` is a case of `self` via `#===` method.
+    #
+    # @return [true,false] Whether `other` is a case of `self`.
+    #
+    def case?(other)
+      other === self
+    end
+
+    #
+    # Test whether `self` matches `other` via `#=~` method.
+    #
+    # @return [true,false] Whether `self` matches `other`.
+    #
+    def match?(other)
+      other =~ self
+    end
+
+    #
+    # Test whether `self` is the `true` instance.
+    #
+    # @return [true,false] Whether `self` is `true`.
+    #
+    def true?
+      TrueClass === self
+    end
+
+    #
+    # Test whether `self` is the `false` instance.
+    #
+    # @return [true,false] Whether `self` is `false`.
+    #
+    def false?
+      FalseClass === self
+    end
+
+    #
+    # Yield the given block and return `true` if the `self` is throw,
+    # otherwise `false`.
+    #
+    # @return [true,false] Whether `self` was thrown.
+    #
+    def thrown?(&block)
+      pass = true
+      catch(self) do
+        begin
+          yield
+        rescue ArgumentError => err     # 1.9 exception
+          #msg += ", not #{err.message.split(/ /).last}"
+        rescue NameError => err         # 1.8 exception
+          #msg += ", not #{err.name.inspect}"
+        end
+        pass = false
+      end
+      pass
+    end
+
+    #
+    # Yield block and return true if it runs without exception and does not
+    # return `nil` or `false`.
+    #
+    # @return [true,false] True if block succeeds, otherwise false.
+    #
+    def satisfy?(&block)
+      begin
+        block.call(self)
+      rescue
+        false
+      end
+    end
+
+  end
+
+  # Mixin for Numeric class that adds `#within?` and `#close?`.
+  #
+  module NumericMixin
+
+    #
+    # Is this value within a given absolute `delta` of another?
+    #
+    # @return [true,false] True if within absolute delta, otherwise false.
+    #
+    def within?(other, delta)
+      a, b, d = self.to_f, other.to_f, delta.to_f
+
+      (b - d) <= a && (b + d) >= a   
+    end
+
+    #
+    # Is this value within a given relative `epsilon` of another?
+    #
+    # @return [true,false] True if within relative epsilon, otherwise false.
+    #
+    def close?(other, epsilon)
+      a, b, e = self.to_f, other.to_f, epsilon.to_f
+
+      d = b * e
+
+      (b - d) <= a && (b + d) >= a
+    end
+
+  end
+
+  # Mixin for Proc class that adds `#raises?`, `#rescues?` and `#throws?`.
+  #
+  module ProcMixin
+
+    #
+    # Execute this procedure and return `true` if the specific given `exception`
+    # is raised, otherwise `false`.
+    #
+    # @return [true,false] Whether exception was raised.
+    #
+    def raises?(exception)
+      begin
+        call
+        false
+      rescue exception => err
+        exception == err.class
+      rescue Exception => err
+        false
+      end
+    end
+
+    #
+    # Execute this procedure and return `true` if the given `exception`,
+    # or subclass there-of is raised, otherwise `false`.
+    #
+    # @return [true,false] Whether exception was rescued.
+    #
+    def rescues?(exception)
+      begin
+        call
+        false
+      rescue exception => err
+        true
+      rescue Exception => err
+        false
+      end
+    end
+
+    #
+    # Execute this procedure and return `true` if the given `object`,
+    # is thrown, otherwise `false`.
+    #
+    # @return [true,false] Whether object was thrown.
+    #
+    def throws?(object)
+      pass = true
+      catch(object) do
+        begin
+          call
+        rescue ArgumentError => err     # 1.9 exception
+          #msg += ", not #{err.message.split(/ /).last}"
+        rescue NameError => err         # 1.8 exception
+          #msg += ", not #{err.name.inspect}"
+        end
+        pass = false
+      end
+      pass
+    end
+
+  end
+
+  # Class-level extension for Exception class that adds `#raised?` and `#rescued?`.
+  #
+  module ExceptionExtension
+
+    #
+    # Yield a given block and return `true` if this exception specifically
+    # is raised, otherwise `false`.
+    #
+    # @return [true,false] Whether exception is raised.
+    #
+    def raised? #:yield:
+      begin
+        yield
+        false
+      rescue self => err
+        self == err.class
+      rescue Exception
+        false
+      end
+    end
+
+    #
+    # Yield a given block and return `true` if this exception, or a sub-class
+    # there-of is raised, otherwise `false`.
+    #
+    # @return [true,false] Whether exception is rescued.
+    #
+    def rescued? #:yield:
+      begin
+        yield
+        false
+      rescue self
+        true
+      rescue Exception
+        false
+      end
+    end
+
   end
 
 end
 
 class Object
-  include Bang
+  include Bang::MethodMissing
+  include Bang::ObjectMixin
 end
 
 class Proc
-  include Bang::ForProc
+  include Bang::ProcMixin
+end
+
+class Numeric
+  include Bang::NumericMixin
+end
+
+class Exception
+  extend Bang::ExceptionExtension
 end
 
