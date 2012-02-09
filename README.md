@@ -6,6 +6,8 @@
 [Source Code](http://github.com/rubyworks/bang) /
 IRC #rubyworks
 
+[![Build Status](https://secure.travis-ci.org/rubyworks/bang.png)](http://travis-ci.org/rubyworks/bang)
+
 
 ## Description
 
