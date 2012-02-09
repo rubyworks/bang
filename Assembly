@@ -1,0 +1,32 @@
+---
+github:
+  gh_pages: web
+
+gem:
+  active: true
+
+dnote:
+  title   : Source Notes
+  output  : log/notes.html
+
+yard:
+  yardopts: true
+  priority: -1
+
+#qedoc:
+#  files : qed/
+#  output: doc/QED.rdoc
+#  title : AE Demonstrandum
+
+email:
+  file    : ~
+  subject : ~
+  mailto  : 
+    - ruby-talk@ruby-lang.org
+    - rubyworks-mailinglist@googlegroups.com
+
+vclog:
+  output: 
+    - log/history.html
+    - log/changes.html
+
