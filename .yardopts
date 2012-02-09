@@ -1,0 +1,7 @@
+--title "Bang! Bang!"
+--readme README.md
+--protected
+--private
+lib
+-
+[A-Z]*.*
