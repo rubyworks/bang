@@ -105,6 +105,12 @@ module Bang
     end
 
     #
+    # Until we can use `#equal?`, lets make the best of it and offer
+    # the plural form as well.
+    #
+    alias :equals? :equal_to?
+
+    #
     # Test whether `self` is like `other`. Like is broad equality
     # measure testing `identical?`, `eql?`, `==` and `===`.
     #
