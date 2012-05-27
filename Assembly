@@ -14,9 +14,9 @@ yard:
   priority: -1
 
 #qedoc:
-#  files : qed/
-#  output: doc/QED.rdoc
-#  title : AE Demonstrandum
+#  files : demo/
+#  output: DEMO.rdoc
+#  title : Bang Demonstrations
 
 email:
   file    : ~

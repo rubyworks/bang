@@ -7,8 +7,14 @@ module DotRuby
   #
   class GemSpec
 
+    #
+    DOTRUBY = '{../,}.ruby' unless defined?(DOTRUBY)
+
+    #
+    MANIFEST = '{../,}manifest{,.txt}' unless defined?(MANIFEST)
+
     # For which revision of .ruby is this gemspec intended?
-    REVISION = 0
+    REVISION = 0 unless defined?(REVISION)
 
     #
     PATTERNS = {
@@ -17,7 +23,7 @@ module DotRuby
       :ext_files  => 'ext/{**/}extconf.rb',
       :doc_files  => '*.{txt,rdoc,md,markdown,tt,textile}',
       :test_files => '{test/{**/}*_test.rb,spec/{**/}*_spec.rb}'
-    }
+    } unless defined?(PATTERNS)
 
     #
     def self.instance
@@ -30,8 +36,8 @@ module DotRuby
 
     #
     def initialize
-      @metadata = YAML.load_file('.ruby')
-      @manifest = Dir.glob('manifest{,.txt}', File::FNM_CASEFOLD).first
+      @metadata = YAML.load_file(Dir.glob(DOTRUBY).first)
+      @manifest = Dir.glob(MANIFEST, File::FNM_CASEFOLD).first
 
       if @metadata['revision'].to_i != REVISION
         warn "You have the wrong revision. Trying anyway..."
@@ -101,7 +107,7 @@ module DotRuby
         gemspec.name        = name
         gemspec.version     = metadata['version']
         gemspec.summary     = metadata['summary']
-        gemspec.description = metadata['description'].to_s.gsub("\n", " ")
+        gemspec.description = metadata['description']
 
         metadata['authors'].each do |author|
           gemspec.authors << author['name']
@@ -118,6 +124,8 @@ module DotRuby
         gemspec.licenses = metadata['copyrights'].map{ |c| c['license'] }.compact
 
         metadata['requirements'].each do |req|
+          next if req['optional']
+
           name    = req['name']
           version = req['version']
           groups  = req['groups'] || []
