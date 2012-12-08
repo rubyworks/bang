@@ -7,6 +7,6 @@ lib/bang/minitest.rb
 lib/bang/testunit.rb
 lib/bang/version.rb
 lib/bang.rb
-COPYING.md
+LICENSE.md
 HISTORY.md
 README.md
