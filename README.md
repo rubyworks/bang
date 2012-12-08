@@ -8,8 +8,7 @@ IRC #rubyworks
 
 [![Build Status](https://secure.travis-ci.org/rubyworks/bang.png)](http://travis-ci.org/rubyworks/bang)
 
-
-## Description
+<br/>
 
 Bang! Bang! is an assertions framework with a very clever design that translates
 any bang call, e.g. `#foo!` into an assertion based on the corresponding query
@@ -23,7 +22,7 @@ In usual Ruby code, bang methods ususually aren't particularly necessary and
 could just as well be handled by non-bang methods, e.g. `#update` vs `#merge!`.
 
 
-## Instruction
+## Instructions
 
 Usage is pretty straight forward.
 
@@ -59,5 +58,5 @@ Bang Bang is Copyright (c) 2012 Rubyworks
 
 You can redistribute it in accordance to the *BSD-2-Clause* license.
 
-Please see the included COPYING.md file for license details.
+Please see the included LICENSE.md file for license details.
 
