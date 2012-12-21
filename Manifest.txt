@@ -5,8 +5,8 @@ demo/01_bang.md
 demo/applique/brass.rb
 lib/bang/minitest.rb
 lib/bang/testunit.rb
-lib/bang/version.rb
 lib/bang.rb
-LICENSE.md
+lib/bang.yml
 HISTORY.md
 README.md
+LICENSE.txt
