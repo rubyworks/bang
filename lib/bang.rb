@@ -308,7 +308,7 @@ module Bang
 
   # Class-level extension for Exception class that adds `#raised?` and `#rescued?`.
   #
-  module ExceptionExtension
+  module ExceptionMixin
 
     #
     # Yield a given block and return `true` if this exception specifically
@@ -362,6 +362,6 @@ class Numeric
 end
 
 class Exception
-  extend Bang::ExceptionExtension
+  extend Bang::ExceptionMixin
 end
 
