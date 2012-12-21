@@ -5,3 +5,5 @@ log
 pkg
 tmp
 web
+work/sandbox
+*.lock

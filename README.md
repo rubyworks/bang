@@ -9,12 +9,12 @@
 
 Bang! Bang! is a [BRASS](http://rubyworks.github.com/brass) compliant assertions
 framework with a very clever design that translates any bang call, e.g. `#foo!`
-into an assertion based on the corresponding query call, `#foo?` (if it exists).
+into an assertion based on the corresponding query call (e.g. `#foo?`), if it exists.
 In practice the framework is similar to MiniTest's spec methods,
 e.g. `#must_equal`, but the dynamic nature of Bang! Bang! makes it much more 
 flexible, as it is not limited to a finite set of assertion methods.
 
-It's also pretty interesting idea that bang methods would be asseriton methods.
+It's also pretty interesting idea that bang methods would be assertion methods.
 In general practice bang methods are usually used for methods that change the
 state of an object *in-place*. But this isn't particularly necessary and 
 is just as well handled by non-bang methods, e.g. `#update` vs `#merge!`.
@@ -42,11 +42,11 @@ For TestUnit use:
 
 An RSpec adapter is in the works.
 
-Cucumber does not require an adapter as it does not differntiate errors
+Cucumber does not require an adapter as it does not differentiate errors
 from assertions.
 
 Note, these adapters simply require the `brass/adapters/minitest` and
-`brass/adapters/testunit` respecitvely along with `bang`. So that's another
+`brass/adapters/testunit` respectively along with `bang`. So that's another
 way to do it too.
 
 
@@ -54,7 +54,7 @@ way to do it too.
 
 Bang! Bang! works via a set of core extensions. There may be some concern
 about this approach for a test framework. I can assure you that the fear
-of the inaptely named "monkey patch" is very much overwrought.
+of the inaptly named "monkey patch" is very much overwrought.
 
 Even though Bang! Bang! adds a `#method_missing` call to the Object class, it is
 almost always okay to use because it does not get called if an object already has
@@ -64,7 +64,7 @@ if a corresponding query (e.g. `foo?`) method exists.
 The other core extensions it adds are simply convenience methods that make testing
 easier. Because these are only additions and not overrides, it is perfectly safe to
 use in all but the most esoteric cases (such a heavy meta-programming). In fact, if
-a program doesn't work becuase of these core extensions, that's usually a good 
+a program doesn't work because of these core extensions, that's usually a good 
 indication that something isn't being done right in the program itself.
 
 
@@ -76,4 +76,4 @@ Bang Bang is copyrighted open source software.
 
 You can redistribute it in accordance to the [BSD-2-Clause](http://spdx.org/licenses/BSD-2-Clause) license.
 
-See the included LICENSE.md file for details.
+See the included LICENSE.txt file for details.
