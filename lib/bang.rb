@@ -1,9 +1,24 @@
 module Bang
 
-  if RUBY_VERSION < '1.9'
-    require 'bang/version'
-  else
-    require_relative 'bang/version'
+  # Bang has brass balls.
+  require 'brass'
+
+  #
+  # If constant is missing check for value in project metadata.
+  # e.g. `Bang::VERSION`.
+  #
+  def self.const_missing(const_name)
+    index[const_name.to_s.downcase] || super(const_name)
+  end
+
+  #
+  # Access project metadata.
+  #
+  def self.index
+    @index ||= (
+      require 'yaml'
+      YAML.load_file(File.dirname(__FILE__) + '/bang.yml')
+    )
   end
 
   # Bang's assertion class. Follows standard set by BRASS project,
@@ -72,8 +87,10 @@ module Bang
 
       result = meth.call(*a, &b)
 
-      if !(neg ^ result)
-        raise Bang::Assertion.piece(s, a, b, caller)
+      if neg
+        refute(result, Bang::Assertion.piece(s, a, b, caller))
+      else
+        assert(result, Bang::Assertion.piece(s, a, b, caller))
       end
     end
 
@@ -100,7 +117,7 @@ module Bang
     #
     # @return [true,false] Whether `self` is equal to `other`.
     #
-    def equal_to?
+    def equal_to?(other)
       other == self
     end
 
