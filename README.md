@@ -56,7 +56,7 @@ Note, these adapters simply require the `brass/adapters/minitest` and
 way to do it too.
 
 
-## On Robustness
+## Considerations
 
 Bang! Bang! works via a set of core extensions. There may be some concern
 about this approach for a test framework. I can assure you that the fear
