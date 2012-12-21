@@ -9,7 +9,7 @@
 
 Bang! Bang! is a [BRASS](http://rubyworks.github.com/brass) compliant assertions
 framework with a very clever design that translates any bang call, e.g. `#foo!`
-into an assertion based on the corresponding query call if it exists (e.g. `#foo?`).
+into an assertion based on the corresponding query call if it exists, e.g. `#foo?`.
 In practice the framework is similar to MiniTest's spec methods,
 e.g. `#must_equal`, but the dynamic nature of Bang! Bang! makes it much more 
 flexible, as it is not limited to a finite set of assertion methods.
