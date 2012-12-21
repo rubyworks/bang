@@ -6,13 +6,13 @@ module Bang
     require_relative 'bang/version'
   end
 
-  # Bang's assertion class. Follows standard set by Brass project,
+  # Bang's assertion class. Follows standard set by BRASS project,
   # defining `#assertion?` method which return `true`.
   #
   class Assertion < ::Exception
 
     #
-    # Price together an Assetion error give the message used to 
+    # Piece together an Assetion error give the message used to 
     # cause the assertion failure.
     #
     # @return [Assertion] Assertion instance.

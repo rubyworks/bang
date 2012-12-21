@@ -1,4 +1,4 @@
-#!mast .index .yardopts bin data demo lib man spec test [A-Z]*.*
+#!mast -x *.lock .index .yardopts bin data demo lib man spec test *.md *.rdoc *.txt
 .index
 .yardopts
 demo/01_bang.md

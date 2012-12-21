@@ -15,7 +15,7 @@ yard:
 
 #qedoc:
 #  files : demo/
-#  output: DEMO.rdoc
+#  output: DEMO.md
 #  title : Bang Demonstrations
 
 email:

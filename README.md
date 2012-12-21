@@ -2,24 +2,22 @@
 
 [Website](http://rubyworks.github.com/bang) /
 [Report Issue](http://github.com/rubyworks/bang/issues) /
-[Mailing List](http://groups.google.com/groups/rubyworks-mailinglist) /
-[Source Code](http://github.com/rubyworks/bang) /
-IRC #rubyworks
-
-[![Build Status](https://secure.travis-ci.org/rubyworks/bang.png)](http://travis-ci.org/rubyworks/bang)
+[Source Code](http://github.com/rubyworks/bang)
+( [![Build Status](https://secure.travis-ci.org/rubyworks/bang.png)](http://travis-ci.org/rubyworks/bang) )
 
 <br/>
 
-Bang! Bang! is an assertions framework with a very clever design that translates
-any bang call, e.g. `#foo!` into an assertion based on the corresponding query
-call, `#foo?` (if it exists). In practice the framework is similar to MiniTest's
-spec expectation methods, e.g. `#must_equal`, but the dynamic nature of Bang!
-Bang! makes it much more flexible, as it is not limited to a finite set of 
-assertion methods.
+Bang! Bang! is a [BRASS](http://rubyworks.github.com/brass) compliant assertions
+framework with a very clever design that translates any bang call, e.g. `#foo!`
+into an assertion based on the corresponding query call, `#foo?` (if it exists).
+In practice the framework is similar to MiniTest's spec methods,
+e.g. `#must_equal`, but the dynamic nature of Bang! Bang! makes it much more 
+flexible, as it is not limited to a finite set of assertion methods.
 
-It's also pretty interesting idea that bang methods are asseriton methods.
-In usual Ruby code, bang methods ususually aren't particularly necessary and 
-could just as well be handled by non-bang methods, e.g. `#update` vs `#merge!`.
+It's also pretty interesting idea that bang methods would be asseriton methods.
+In general practice bang methods are usually used for methods that change the
+state of an object *in-place*. But this isn't particularly necessary and 
+is just as well handled by non-bang methods, e.g. `#update` vs `#merge!`.
 
 
 ## Instructions
@@ -52,11 +50,30 @@ Note, these adapters simply require the `brass/adapters/minitest` and
 way to do it too.
 
 
+## On Robustness
+
+Bang! Bang! works via a set of core extensions. There may be some concern
+about this approach for a test framework. I can assure you that the fear
+of the inaptely named "monkey patch" is very much overwrought.
+
+Even though Bang! Bang! adds a `#method_missing` call to the Object class, it is
+almost always okay to use because it does not get called if an object already has
+a bang method defined for it's own use. And when it does get called it only applies
+if a corresponding query (e.g. `foo?`) method exists.
+
+The other core extensions it adds are simply convenience methods that make testing
+easier. Because these are only additions and not overrides, it is perfectly safe to
+use in all but the most esoteric cases (such a heavy meta-programming). In fact, if
+a program doesn't work becuase of these core extensions, that's usually a good 
+indication that something isn't being done right in the program itself.
+
+
 ## Copyrights
 
-Bang Bang is Copyright (c) 2012 Rubyworks
+Bang Bang is copyrighted open source software.
 
-You can redistribute it in accordance to the *BSD-2-Clause* license.
+    Copyright (c) 2012 Rubyworks
 
-Please see the included LICENSE.md file for license details.
+You can redistribute it in accordance to the [BSD-2-Clause](http://spdx.org/licenses/BSD-2-Clause) license.
 
+See the included LICENSE.md file for details.
