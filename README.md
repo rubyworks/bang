@@ -9,7 +9,7 @@
 
 Bang! Bang! is a [BRASS](http://rubyworks.github.com/brass) compliant assertions
 framework with a very clever design that translates any bang call, e.g. `#foo!`
-into an assertion based on the corresponding query call (e.g. `#foo?`), if it exists.
+into an assertion based on the corresponding query call if it exists (e.g. `#foo?`).
 In practice the framework is similar to MiniTest's spec methods,
 e.g. `#must_equal`, but the dynamic nature of Bang! Bang! makes it much more 
 flexible, as it is not limited to a finite set of assertion methods.
@@ -24,9 +24,11 @@ is just as well handled by non-bang methods, e.g. `#update` vs `#merge!`.
 
 Usage is pretty straight forward.
 
+```ruby
     require 'bang'
 
     "This string".equals!("That string")  #=> raises Bang::Assertion
+```
 
 To use Bang! Bang! most effectively with common test frameworks, you may need
 to load an adapter to ensure the framework recognizes the assertions as
@@ -34,11 +36,15 @@ such rather than as ordinary errors.
 
 For MiniTest use:
 
+```ruby
     require 'bang/minitest'`
+```
 
 For TestUnit use:
 
+```ruby
     require 'bang/testunit'
+```
 
 An RSpec adapter is in the works.
 
